@@ -1,0 +1,18 @@
+#multiplication-table {
+	float: left;
+}
+
+#switcher {
+	margin-left: 100px;
+	float: left;
+}
+
+table tr td {
+	padding: 10px;
+	text-align: right;
+	font-size: 2em;
+}
+
+.multiple {
+	color: red;
+}

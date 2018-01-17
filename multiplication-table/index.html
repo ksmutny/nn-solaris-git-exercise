@@ -1,0 +1,81 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Násobilka</title>
+		<meta charset="utf-8" />
+		<link rel="stylesheet" href="css/style.css" />
+	</head>
+	<body>
+		<script src="js/react.min.js"></script>
+		<script src="js/reflux.min.js"></script>
+		<script src="js/JSXTransformer.js"></script>
+		<script type="text/jsx">
+			var digits = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+			
+			var highlightMultiple = Reflux.createAction();
+			
+			var Row = React.createClass({
+				mixins: [Reflux.connect(highlightMultiple, "multiple")],
+				
+				getInitialState: function() {
+					return { multiple: 101 };
+				},
+			
+			    render: function() {
+					return <tr>{digits.map(this.renderCell(this.props.row))}</tr>;
+				},
+				
+				renderCell: function(row) {
+					var multiple = this.state.multiple;
+					return function(digit) {
+						var number = row*10 + digit + 1;
+						var className = number % multiple == 0 ? "multiple" : "";
+						return <td className={className}>{number}</td>;	
+					};
+				}
+			});
+			
+			var MultiplicationTable = React.createClass({
+				render: function() {
+					return <table>{digits.map(this.renderRow)}</table>;
+				},
+				
+				renderRow: function(row) {
+					return <Row row={row}/>;
+				}
+			});
+			
+			var Switcher = React.createClass({
+				render: function() {
+					return <table>{digits.map(this.renderDigit)}</table>;
+				},
+				
+				renderDigit: function(digit) {
+					var multiple = digit + 1;
+					return <tr><td><a href="#" onClick={this.setMultiple(multiple)}>{multiple}</a></td></tr>;
+				},
+				
+				setMultiple: function(multiple) {
+					return function() {
+						highlightMultiple(multiple);
+					}
+				}
+			});
+
+			var MultiplicationApp = React.createClass({
+				render: function() {
+					return <section>
+						<div id="multiplication-table">
+							<MultiplicationTable />
+						</div>
+						<div id="switcher">
+							<Switcher />
+						</div>
+					</section>; 
+				}
+			});
+			
+			React.render(<MultiplicationApp />, document.body);			
+		</script>
+	</body>
+</html>
